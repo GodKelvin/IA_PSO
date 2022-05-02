@@ -1,9 +1,15 @@
 import random
 import numpy as np 
+import math
 
 #function that models the problem
 def fitness_function(position):
-    return position[0]**2 + position[1]**2 + 1
+    #return position[0]**2 + position[1]**2 + 1
+
+    seno_raiz = math.sin(math.sqrt(abs((position[0] / 2) + (position[1] + 47))))
+    x_seno_raiz = position[0] * (math.sin(math.sqrt(abs(position[0] - (position[1] + 47)))))
+
+    return -1*(position[1]+47) * seno_raiz - x_seno_raiz
 
 
 def random_position():
@@ -13,12 +19,16 @@ def random_position():
 def random_velocidade():
     #Intervalos designados na especificacao do trabalho
     return [random.uniform(-77, 77),random.uniform(-77, 77)]
+
+def update_velocidade(iteracao, velocidade_atual, pbest, gbest):
+    return (W*velocidade_atual)
+
     
-#Some variables to calculate the velocity
+#Setup
 W = 0.5
 c1 = 0.5
 c2 = 0.9
-target = 1
+#target = 1
 
 #Quantidade de iteracoes vai variar conforme testes
 n_iterations = 100
