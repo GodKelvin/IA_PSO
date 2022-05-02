@@ -5,9 +5,9 @@ W = 0.5
 c1 = 0.8
 c2 = 0.9 
 
-n_iterations = int(input("Inform the number of iterations: "))
-target_error = float(input("Inform the target error: "))
-n_particles = int(input("Inform the number of particles: "))
+n_iterations = 50
+target_error = 1e-6
+n_particles = 30
 
 class Particle():
     def __init__(self):
@@ -17,7 +17,8 @@ class Particle():
         self.velocity = np.array([0,0])
 
     def __str__(self):
-        print("I am at ", self.position, " meu pbest is ", self.pbest_position)
+        #print("I am at ", self.position, " meu pbest is ", self.pbest_position)
+        a = 1
     
     def move(self):
         self.position = self.position + self.velocity
