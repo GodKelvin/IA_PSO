@@ -18,8 +18,12 @@ def random_velocidade():
     #Intervalos designados na especificacao do trabalho
     return [random.uniform(-77, 77),random.uniform(-77, 77)]
 
-def update_velocidade(iteracao, velocidade_atual, pbest, gbest, posicao):
+def update_velocidade(velocidade_atual, pbest, gbest, posicao):
     return (W * velocidade_atual) + c1 * random.uniform(pbest - posicao[0]) + c2 * random.uniforme(gbest - posicao[0])
+
+
+def update_posicao(posicao, velocidade):
+    return posicao[0] + velocidade
 
     
 #Setup
@@ -31,16 +35,13 @@ c2 = 0.9
 #Quantidade de iteracoes vai variar conforme testes
 n_iterations = 100
 
-#Taxa de erro
-# target_error = float(input("Inform the target error: "))
-
 #1 - Determinar o numero de particulas P da populacao
 qtd_particulas = 30
 
 #2 - Inicializar aleatoriamente a posicao inicial(x) de cada particula
-particulas = np.array([np.array(random_position()) for _ in range(qtd_particulas)])
+posicao_particulas = np.array([np.array(random_position()) for _ in range(qtd_particulas)])
 
-pbest_position = particulas
+pbest_position = posicao_particulas
 pbest_fitness_value = np.array([float('inf') for _ in range(qtd_particulas)])
 gbest_fitness_value = float('inf')
 gbest_position = np.array([float('inf'), float('inf')])
@@ -56,30 +57,33 @@ iteration = 0
 while iteration < n_iterations:
     for i in range(qtd_particulas):
         #4 a) - Calculando aptidao de 'p'
-        fitness_cadidate = fitness_function(particulas[i])
+        fitness_cadidate = fitness_function(posicao_particulas[i])
         
         #4 b) - Verificando a melhor posicao de 'p'
         if(pbest_fitness_value[i] > fitness_cadidate):
             pbest_fitness_value[i] = fitness_cadidate
-            pbest_position[i] = particulas[i]
+            pbest_position[i] = posicao_particulas[i]
 
         #5 - Verificando a melhor aptdao da populacao
         if(gbest_fitness_value > fitness_cadidate):
             gbest_fitness_value = fitness_cadidate
-            gbest_position = particulas[i]
+            gbest_position = posicao_particulas[i]
     
     for i in range(qtd_particulas):
         #6 a) - Atualizando velocidade
-        nova_velocidade = (W*vetor_velocidade[i]) + (c1*random.random()) * (pbest_position[i] - particulas[i]) + (c2*random.random()) * (gbest_position-particulas[i])
+        #nova_velocidade = (W*vetor_velocidade[i]) + (c1*random.random()) * (pbest_position[i] - particulas[i]) + (c2*random.random()) * (gbest_position-particulas[i])
+        nova_velocidade = update_velocidade(vetor_velocidade[i], pbest_fitness_value[i], gbest_fitness_value, posicao_particulas[i])
         
         #Limites de 'v(i)'
         if(nova_velocidade < -77):
             nova_velocidade = -77
         elif(nova_velocidade > 77):
             nova_velocidade = 77
+        
+        vetor_velocidade[i] = nova_velocidade
 
-        nova_posicao = nova_velocidade + particulas[i]
-        particulas[i] = nova_posicao
+        nova_posicao = update_posicao(posicao_particulas[i], vetor_velocidade[i])
+        posicao_particulas[i] = nova_posicao
 
     iteration = iteration + 1
     
