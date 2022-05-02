@@ -4,12 +4,10 @@ import math
 
 #function that models the problem
 def fitness_function(position):
-    #return position[0]**2 + position[1]**2 + 1
-
+    #Modularizando para melhor manutencao da funcao
     seno_raiz = math.sin(math.sqrt(abs((position[0] / 2) + (position[1] + 47))))
     x_seno_raiz = position[0] * (math.sin(math.sqrt(abs(position[0] - (position[1] + 47)))))
-
-    return -1*(position[1]+47) * seno_raiz - x_seno_raiz
+    return (-1*(position[1]+47) * seno_raiz) - x_seno_raiz
 
 
 def random_position():
@@ -20,8 +18,8 @@ def random_velocidade():
     #Intervalos designados na especificacao do trabalho
     return [random.uniform(-77, 77),random.uniform(-77, 77)]
 
-def update_velocidade(iteracao, velocidade_atual, pbest, gbest):
-    return (W*velocidade_atual)
+def update_velocidade(iteracao, velocidade_atual, pbest, gbest, posicao):
+    return (W * velocidade_atual) + c1 * random.uniform(pbest - posicao[0]) + c2 * random.uniforme(gbest - posicao[0])
 
     
 #Setup
@@ -72,9 +70,16 @@ while iteration < n_iterations:
     
     for i in range(qtd_particulas):
         #6 a) - Atualizando velocidade
-        new_velocity = (W*vetor_velocidade[i]) + (c1*random.random()) * (pbest_position[i] - particulas[i]) + (c2*random.random()) * (gbest_position-particulas[i])
-        new_position = new_velocity + particulas[i]
-        particulas[i] = new_position
+        nova_velocidade = (W*vetor_velocidade[i]) + (c1*random.random()) * (pbest_position[i] - particulas[i]) + (c2*random.random()) * (gbest_position-particulas[i])
+        
+        #Limites de 'v(i)'
+        if(nova_velocidade < -77):
+            nova_velocidade = -77
+        elif(nova_velocidade > 77):
+            nova_velocidade = 77
+
+        nova_posicao = nova_velocidade + particulas[i]
+        particulas[i] = nova_posicao
 
     iteration = iteration + 1
     
