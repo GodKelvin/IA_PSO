@@ -35,14 +35,14 @@ def update_w(iteracao):
 	return Wmax - (iteracao*(Wmax-Wmin) / n_iterations)
     
 #Setup
-Wmax = 2
+Wmax = 15
 Wmin = 1
 Watual = Wmax
-c1 = 0.5
-c2 = 0.9
+c1 = 1
+c2 = 1.5
 
 #Quantidade de iteracoes vai variar conforme testes
-n_iterations = 100
+n_iterations = 1000
 
 #1 - Determinar o numero de particulas P da populacao
 qtd_particulas = 30
