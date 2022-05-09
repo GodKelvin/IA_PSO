@@ -120,16 +120,42 @@ def run_pso(n_iterations):
 	return [gbest_fitness_value, gbest_position]
 
 def main():
-	best_result_20 = 0
+	best_result_20 = float('inf')
 	media_result_20 = 0
 
-	best_result_50 = 0
+	best_result_50 = float('inf')
 	media_result_50 = 0
 
-	best_result_100 = 0
+	best_result_100 = float('inf')
 	media_result_100 = 0
 
 
-	print(run_pso(20))
+	for i in range(10):
+		result_20 = run_pso(20)
+		result_50 = run_pso(50)
+		result_100 = run_pso(100)
 
+		#Pegando os melhores resultados
+		if(result_20[0] < best_result_20):
+			best_result_20 = result_20[0]
+		
+		if(result_50[0] < best_result_50):
+			best_result_50 = result_50[0]
+
+		if(result_100[0] < best_result_100):
+			best_result_100 = result_100[0]
+		
+		#Soma para realizar a media
+		media_result_20 += result_20[0]
+		media_result_50 += result_50[0]
+		media_result_100 += result_100[0]
+
+	#Realizando a media
+	media_result_20 = media_result_20 / 10
+	media_result_50 = media_result_50 / 10
+	media_result_100 = media_result_100 / 10
+
+	print("Best 20: %f. Media 20: %f" %(best_result_20, media_result_20))
+	print("Best 50: %f. Media 50: %f" %(best_result_50, media_result_50))
+	print("Best 100: %f. Media 100: %f" %(best_result_100, media_result_100))
 main()
