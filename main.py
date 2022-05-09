@@ -18,7 +18,7 @@ def random_velocidade():
     #Intervalos designados na especificacao do trabalho
     return [random.uniform(-77, 77),random.uniform(-77, 77)]
 
-def update_velocidade(velocidade_atual,Watual, pbest, gbest, posicao):
+def update_velocidade(velocidade_atual,Watual, pbest, gbest, posicao, c1, c2):
 	x = (Watual * velocidade_atual[0]) + c1 * random.uniform(0,1)*(pbest[0] - posicao[0]) + c2 * random.uniform(0,1)*(gbest[0] - posicao[0])
 	y = (Watual * velocidade_atual[1]) + c1 * random.uniform(0,1)*(pbest[1] - posicao[1]) + c2 * random.uniform(0,1)*(gbest[1] - posicao[1])
 	
@@ -31,88 +31,105 @@ def update_posicao(posicao, velocidade):
 	
 	return [x,y]
 
-def update_w(iteracao):
+def update_w(iteracao, Wmax, Wmin, n_iterations):
 	return Wmax - (iteracao*(Wmax-Wmin) / n_iterations)
-    
-#Setup
-Wmax = 15
-Wmin = 1
-Watual = Wmax
-c1 = 1
-c2 = 1.5
 
-#Quantidade de iteracoes vai variar conforme testes
-n_iterations = 1000
 
-#1 - Determinar o numero de particulas P da populacao
-qtd_particulas = 30
+def run_pso(n_iterations):
 
-#2 - Inicializar aleatoriamente a posicao inicial(x) de cada particula
-posicao_particulas = []
-pbest_fitness_value = []
-vetor_velocidade = []
+	#Setup
+	Wmax = 15
+	Wmin = 1
+	Watual = Wmax
+	c1 = 1
+	c2 = 1.5
 
-#3 - Velocidade inicial(v) para todas as particulas
-velocidade_inicial = random_velocidade()
+	#Quantidade de iteracoes vai variar conforme testes
+	#n_iterations = 100
 
-for i in range(qtd_particulas):
-    posicao_particulas.append(random_position())
-    pbest_fitness_value.append(float('inf'))
-    vetor_velocidade.append(velocidade_inicial)
+	#1 - Determinar o numero de particulas P da populacao
+	qtd_particulas = 50
 
-pbest_position = posicao_particulas
-gbest_fitness_value = float('inf')
-gbest_position = [0,0]
+	#2 - Inicializar aleatoriamente a posicao inicial(x) de cada particula
+	posicao_particulas = []
+	pbest_fitness_value = []
+	vetor_velocidade = []
 
-iteration = 0
-while iteration < n_iterations:
+	#3 - Velocidade inicial(v) para todas as particulas
+	velocidade_inicial = random_velocidade()
+
 	for i in range(qtd_particulas):
-		#4 a) - Calculando aptidao de 'p'
-		fitness_cadidate = fitness_function(posicao_particulas[i])
+		posicao_particulas.append(random_position())
+		pbest_fitness_value.append(float('inf'))
+		vetor_velocidade.append(velocidade_inicial)
 
-		#4 b) - Verificando a melhor posicao de 'p'
-		if(pbest_fitness_value[i] > fitness_cadidate):
-			pbest_fitness_value[i] = fitness_cadidate
-			pbest_position[i] = posicao_particulas[i]
+	pbest_position = posicao_particulas
+	gbest_fitness_value = float('inf')
+	gbest_position = [0,0]
 
-		#5 - Verificando a melhor aptdao da populacao
-		if(gbest_fitness_value > fitness_cadidate):
-			gbest_fitness_value = fitness_cadidate
-			gbest_position = posicao_particulas[i]
-			print(gbest_position)
+	iteration = 0
+	while iteration < n_iterations:
+		for i in range(qtd_particulas):
+			#4 a) - Calculando aptidao de 'p'
+			fitness_cadidate = fitness_function(posicao_particulas[i])
 
-	Watual = update_w(iteration)
-	for i in range(qtd_particulas):
-		#6 a) - Atualizando velocidade
-		nova_velocidade = update_velocidade(vetor_velocidade[i], Watual, pbest_position[i], gbest_position, posicao_particulas[i])
-		#Limitando a velocidade x
-		if(nova_velocidade[0] < -77):
-			nova_velocidade[0] = -77
-		elif(nova_velocidade[0] > 77):
-			nova_velocidade[0] = 77
-        
-		#Limitando a velocidade y
-		if(nova_velocidade[1] < -77):
-			nova_velocidade[1] = -77
-		elif(nova_velocidade[1] > 77):
-			nova_velocidade[1] = 77
+			#4 b) - Verificando a melhor posicao de 'p'
+			if(pbest_fitness_value[i] > fitness_cadidate):
+				pbest_fitness_value[i] = fitness_cadidate
+				pbest_position[i] = posicao_particulas[i]
 
-		vetor_velocidade[i] =nova_velocidade
-		#6 b) - Atualizando a posicao
-		nova_posicao = update_posicao(posicao_particulas[i], vetor_velocidade[i])
-		if(nova_posicao[0] < -512):
-			nova_posicao[0] = -512
-		elif(nova_posicao[0] > 512):
-			nova_posicao[0] = 512
+			#5 - Verificando a melhor aptdao da populacao
+			if(gbest_fitness_value > fitness_cadidate):
+				gbest_fitness_value = fitness_cadidate
+				gbest_position = posicao_particulas[i]
+
+		Watual = update_w(iteration, Wmax, Wmin, n_iterations)
+		for i in range(qtd_particulas):
+			#6 a) - Atualizando velocidade
+			nova_velocidade = update_velocidade(vetor_velocidade[i], Watual, pbest_position[i], gbest_position, posicao_particulas[i], c1, c2)
+			#Limitando a velocidade x
+			if(nova_velocidade[0] < -77):
+				nova_velocidade[0] = -77
+			elif(nova_velocidade[0] > 77):
+				nova_velocidade[0] = 77
+			
+			#Limitando a velocidade y
+			if(nova_velocidade[1] < -77):
+				nova_velocidade[1] = -77
+			elif(nova_velocidade[1] > 77):
+				nova_velocidade[1] = 77
+
+			vetor_velocidade[i] =nova_velocidade
+			#6 b) - Atualizando a posicao
+			nova_posicao = update_posicao(posicao_particulas[i], vetor_velocidade[i])
+			if(nova_posicao[0] < -512):
+				nova_posicao[0] = -512
+			elif(nova_posicao[0] > 512):
+				nova_posicao[0] = 512
+			
+			if(nova_posicao[1] < -512):
+				nova_posicao[1] = -512
+			elif(nova_posicao[1] > 512):
+				nova_posicao[1] = 512
+			
+			posicao_particulas[i] =nova_posicao
 		
-		if(nova_posicao[1] < -512):
-			nova_posicao[1] = -512
-		elif(nova_posicao[1] > 512):
-			nova_posicao[1] = 512
-		
-		posicao_particulas[i] =nova_posicao
-	
-	#7 - Condicao de terminao nao foi alcancada
-	iteration = iteration + 1
+		#7 - Condicao de terminao nao foi alcancada
+		iteration = iteration + 1
 
-print("Posicao GBEST: ", gbest_position, "Valor: ", gbest_fitness_value)
+	return [gbest_fitness_value, gbest_position]
+
+def main():
+	best_result_20 = 0
+	media_result_20 = 0
+
+	best_result_50 = 0
+	media_result_50 = 0
+
+	best_result_100 = 0
+	media_result_100 = 0
+
+
+	print(run_pso(20))
+
+main()
