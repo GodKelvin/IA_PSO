@@ -2,6 +2,8 @@ import random
 import numpy as np 
 import math
 
+from pandas import array
+
 
 def fitness_function(position):
     #Modularizando para melhor manutencao da funcao
@@ -122,18 +124,25 @@ def run_pso(n_iterations):
 def main():
 	best_result_20 = float('inf')
 	media_result_20 = 0
+	array_result_20 = []
 
 	best_result_50 = float('inf')
 	media_result_50 = 0
+	array_result_50 = []
 
 	best_result_100 = float('inf')
 	media_result_100 = 0
+	array_result_100 = []
 
 
 	for i in range(10):
 		result_20 = run_pso(20)
 		result_50 = run_pso(50)
 		result_100 = run_pso(100)
+
+		array_result_20.append(result_20[0])
+		array_result_50.append(result_50[0])
+		array_result_100.append(result_100[0])
 
 		#Pegando os melhores resultados
 		if(result_20[0] < best_result_20):
@@ -158,4 +167,9 @@ def main():
 	print("Best 20: %f. Media 20: %f" %(best_result_20, media_result_20))
 	print("Best 50: %f. Media 50: %f" %(best_result_50, media_result_50))
 	print("Best 100: %f. Media 100: %f" %(best_result_100, media_result_100))
+
+	print("\n--Results--")
+	print("20 iterations:\n", array_result_20, "\n")
+	print("50 iterations:\n", array_result_50, "\n")
+	print("100 iterations:\n", array_result_100, "\n")
 main()
