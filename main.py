@@ -1,8 +1,6 @@
 import random
-import numpy as np 
 import math
-
-from pandas import array
+from pathlib import Path
 import matplotlib.pyplot as plt
 
 
@@ -130,27 +128,24 @@ def run_pso(n_iterations, qtd_particulas):
 
 
 
-def save_graph(x, y, leg):
-	plt.plot(x, y)
+def save_graph(x, media, best, leg):
+	plt.plot(x, media, label = "Media")
+	plt.plot(x, best, label = "Best Result")
 	plt.title(leg)
 	plt.xlabel("Iteração")
 	plt.ylabel("Gbest")
-	plt.show()
-	plt.savefig("%s.png" %leg)
+	plt.legend()
+	plt.savefig("plot_graphs/%s.png" %leg)
 	plt.close()
 
 def remover_duplicados(list):
 	tamanho_original = len(list)
-	print("AQUI")
 	new_list = []
 	new_eixo = []
 	for i in range(tamanho_original):
 		if(list[i] not in new_list):
 			new_list.append(list[i])
 			new_eixo.append(i+1)
-	
-	print(new_list)
-	print(new_eixo)
 
 	return [new_list, new_eixo]
 
@@ -173,7 +168,7 @@ def run(qtd_particulas):
 	array_result_100 = []
 	media_iteration_100 = [0] * 100
 	
-	qtd_rodadas = 5
+	qtd_rodadas = 10
 
 	for i in range(qtd_rodadas):
 		result_20 = run_pso(20, qtd_particulas)
@@ -224,15 +219,12 @@ def run(qtd_particulas):
 	for i in range(100):
 		media_iteration_100[i] = media_iteration_100[i] / qtd_rodadas
 	
-	print("\n\n")
-	print(media_iteration_20)
 
-	print("Best 20: %f. Media 20: %f" %(best_result_20[0], media_result_20))
-	print(best_result_20)
-
-	formated_list = remover_duplicados(media_iteration_20)
-	#save_graph(formated_list[1], formated_list[0], "Teste")
-	save_graph([x for x in range(20)], media_iteration_20, "Teste")
+	#print("Best 20: %f. Media 20: %f" %(best_result_20[0], media_result_20))
+	#rint(media_iteration_20)
+	#print(best_result_20[2])
+	legenda = str(qtd_particulas)  + ' particulas . 20 iteracoes'
+	save_graph([x for x in range(20)], media_iteration_20, best_result_20[2], legenda)
 	
 	# print("Best 50: %f. Media 50: %f" %(best_result_50, media_result_50))
 	# print("Best 100: %f. Media 100: %f" %(best_result_100, media_result_100))
@@ -253,9 +245,12 @@ def run(qtd_particulas):
 	
 
 def main():
-	print("--Resultados para 50 particulas--")
+	path = Path("plot_graphs")
+	path.mkdir(exist_ok=True)
+	#print("--Resultados para 50 particulas--")
 	run(50)
 	
-	print("--Resultados para 100 particulas--")
+	#print("--Resultados para 100 particulas--")
 	run(100)
+	print("Checar pasta: plot_graphs")
 main()
