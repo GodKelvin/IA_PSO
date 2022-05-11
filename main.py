@@ -129,9 +129,36 @@ def run_pso(n_iterations, qtd_particulas):
 	return [gbest_fitness_value, gbest_position, all_gbest_iteration]
 
 
+
+def save_graph(x, y, leg):
+	plt.plot(x, y)
+	plt.title(leg)
+	plt.xlabel("Iteração")
+	plt.ylabel("Gbest")
+	plt.show()
+	plt.savefig("%s.png" %leg)
+	plt.close()
+
+def remover_duplicados(list):
+	tamanho_original = len(list)
+	print("AQUI")
+	new_list = []
+	new_eixo = []
+	for i in range(tamanho_original):
+		if(list[i] not in new_list):
+			new_list.append(list[i])
+			new_eixo.append(i+1)
+	
+	print(new_list)
+	print(new_eixo)
+
+	return [new_list, new_eixo]
+
+
 def run(qtd_particulas):
 	
-	best_result_20 = float('inf')
+	#Valor, posicao e lista de Gbest da respectiva iteracao
+	best_result_20 = [float('inf'), [0,0], []]
 	media_result_20 = 0
 	array_result_20 = []
 	media_iteration_20 = [0] * 20
@@ -158,8 +185,8 @@ def run(qtd_particulas):
 		array_result_100.append(result_100[0])
 
 		#Pegando os melhores resultados
-		if(result_20[0] < best_result_20):
-			best_result_20 = result_20[0]
+		if(result_20[0] < best_result_20[0]):
+			best_result_20 = result_20
 		
 		if(result_50[0] < best_result_50):
 			best_result_50 = result_50[0]
@@ -173,8 +200,6 @@ def run(qtd_particulas):
 		media_result_100 += result_100[0]
 
 		#Soma para realizar a media das iteracoes
-		print(result_20[2])
-		print("kelvin")
 		for i in range(20):
 			media_iteration_20[i] += result_20[2][i]
 
@@ -202,7 +227,13 @@ def run(qtd_particulas):
 	print("\n\n")
 	print(media_iteration_20)
 
-	# print("Best 20: %f. Media 20: %f" %(best_result_20, media_result_20))
+	print("Best 20: %f. Media 20: %f" %(best_result_20[0], media_result_20))
+	print(best_result_20)
+
+	formated_list = remover_duplicados(media_iteration_20)
+	#save_graph(formated_list[1], formated_list[0], "Teste")
+	save_graph([x for x in range(20)], media_iteration_20, "Teste")
+	
 	# print("Best 50: %f. Media 50: %f" %(best_result_50, media_result_50))
 	# print("Best 100: %f. Media 100: %f" %(best_result_100, media_result_100))
 
