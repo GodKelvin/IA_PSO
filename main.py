@@ -65,10 +65,6 @@ def run_pso(n_iterations, qtd_particulas):
 	gbest_position = [0,0]
 	
 	all_gbest_iteration = []
-	media_gbest_iteration = []
-	for i in n_iterations:
-		#Media de cada iteracao
-		media_gbest_iteration.append(0)
 
 	iteration = 0
 	while iteration < n_iterations:
@@ -119,21 +115,18 @@ def run_pso(n_iterations, qtd_particulas):
 		
 		#Salvar o gbest no array de cata iteracao
 		all_gbest_iteration.append(gbest_fitness_value)
-		media_gbest_iteration[i] += gbest_fitness_value
+		#media_gbest_iteration[iteration] += gbest_fitness_value
 		
 		#7 - Condicao de terminao nao foi alcancada
 		iteration = iteration + 1
 	
 	#Calcular media de cada iteracao e plotar grafico
-	for i in n_iterations:
-		media_gbest_iteration[i] = media_gbest_iteration[i] / n_iterations
+	# for i in range(n_iterations):
+	# 	media_gbest_iteration[i] = media_gbest_iteration[i] / n_iterations
 	
 	#Salvar valores do melhor valor da iteracao
-
 	#6 graficos com 2 tracados cada(50 e 100 particulas, media de cada iteracao e qual iteracao encontrei o melhor resultado)
-	print("QUANTIDADE DE ITERACOES: %i" %n_iterations)
-	print(all_gbest_iteration)
-	return [gbest_fitness_value, gbest_position]
+	return [gbest_fitness_value, gbest_position, all_gbest_iteration]
 
 
 def run(qtd_particulas):
@@ -141,17 +134,20 @@ def run(qtd_particulas):
 	best_result_20 = float('inf')
 	media_result_20 = 0
 	array_result_20 = []
+	media_iteration_20 = [0] * 20
 
 	best_result_50 = float('inf')
 	media_result_50 = 0
 	array_result_50 = []
+	media_iteration_50 = [0] * 50
 
 	best_result_100 = float('inf')
 	media_result_100 = 0
 	array_result_100 = []
+	media_iteration_100 = [0] * 100
 	
-	qtd_rodadas = 50
-	
+	qtd_rodadas = 5
+
 	for i in range(qtd_rodadas):
 		result_20 = run_pso(20, qtd_particulas)
 		result_50 = run_pso(50, qtd_particulas)
@@ -176,19 +172,44 @@ def run(qtd_particulas):
 		media_result_50 += result_50[0]
 		media_result_100 += result_100[0]
 
-	#Realizando a media
+		#Soma para realizar a media das iteracoes
+		print(result_20[2])
+		print("kelvin")
+		for i in range(20):
+			media_iteration_20[i] += result_20[2][i]
+
+		for i in range(50):
+			media_iteration_50[i] += result_50[2][i]
+
+		for i in range(100):
+			media_iteration_100[i] += result_100[2][i]
+
+	#Realizando a media (valor)
 	media_result_20 = media_result_20 / qtd_rodadas
 	media_result_50 = media_result_50 / qtd_rodadas
 	media_result_100 = media_result_100 / qtd_rodadas
 
-	print("Best 20: %f. Media 20: %f" %(best_result_20, media_result_20))
-	print("Best 50: %f. Media 50: %f" %(best_result_50, media_result_50))
-	print("Best 100: %f. Media 100: %f" %(best_result_100, media_result_100))
+	#Realizando a media (iteracao)
+	for i in range(20):
+		media_iteration_20[i] = media_iteration_20[i] / qtd_rodadas
 
-	print("\n--Results--")
-	print("20 iterations:\n", array_result_20, "\n")
-	print("50 iterations:\n", array_result_50, "\n")
-	print("100 iterations:\n", array_result_100, "\n")
+	for i in range(50):
+		media_iteration_50[i] = media_iteration_50[i] / qtd_rodadas
+
+	for i in range(100):
+		media_iteration_100[i] = media_iteration_100[i] / qtd_rodadas
+	
+	print("\n\n")
+	print(media_iteration_20)
+
+	# print("Best 20: %f. Media 20: %f" %(best_result_20, media_result_20))
+	# print("Best 50: %f. Media 50: %f" %(best_result_50, media_result_50))
+	# print("Best 100: %f. Media 100: %f" %(best_result_100, media_result_100))
+
+	# print("\n--Results--")
+	# print("20 iterations:\n", array_result_20, "\n")
+	# print("50 iterations:\n", array_result_50, "\n")
+	# print("100 iterations:\n", array_result_100, "\n")
 	
 	#x = [1,2,3,4,5,6,7,8,9,10]
 	#array_result_20.sort(reverse=True)
