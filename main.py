@@ -3,6 +3,7 @@ import numpy as np
 import math
 
 from pandas import array
+import matplotlib.pyplot as plt
 
 
 def fitness_function(position):
@@ -37,20 +38,14 @@ def update_w(iteracao, Wmax, Wmin, n_iterations):
 	return Wmax - (iteracao*(Wmax-Wmin) / n_iterations)
 
 
-def run_pso(n_iterations):
+def run_pso(n_iterations, qtd_particulas):
 
 	#Setup
 	Wmax = 15
 	Wmin = 1
 	Watual = Wmax
-	c1 = 1
-	c2 = 1.5
-
-	#Quantidade de iteracoes vai variar conforme testes
-	#n_iterations = 100
-
-	#1 - Determinar o numero de particulas P da populacao
-	qtd_particulas = 50
+	c1 = 2.5
+	c2 = 2.5
 
 	#2 - Inicializar aleatoriamente a posicao inicial(x) de cada particula
 	posicao_particulas = []
@@ -68,6 +63,12 @@ def run_pso(n_iterations):
 	pbest_position = posicao_particulas
 	gbest_fitness_value = float('inf')
 	gbest_position = [0,0]
+	
+	all_gbest_iteration = []
+	media_gbest_iteration = []
+	for i in n_iterations:
+		#Media de cada iteracao
+		media_gbest_iteration.append(0)
 
 	iteration = 0
 	while iteration < n_iterations:
@@ -116,12 +117,27 @@ def run_pso(n_iterations):
 			
 			posicao_particulas[i] =nova_posicao
 		
+		#Salvar o gbest no array de cata iteracao
+		all_gbest_iteration.append(gbest_fitness_value)
+		media_gbest_iteration[i] += gbest_fitness_value
+		
 		#7 - Condicao de terminao nao foi alcancada
 		iteration = iteration + 1
+	
+	#Calcular media de cada iteracao e plotar grafico
+	for i in n_iterations:
+		media_gbest_iteration[i] = media_gbest_iteration[i] / n_iterations
+	
+	#Salvar valores do melhor valor da iteracao
 
+	#6 graficos com 2 tracados cada(50 e 100 particulas, media de cada iteracao e qual iteracao encontrei o melhor resultado)
+	print("QUANTIDADE DE ITERACOES: %i" %n_iterations)
+	print(all_gbest_iteration)
 	return [gbest_fitness_value, gbest_position]
 
-def main():
+
+def run(qtd_particulas):
+	
 	best_result_20 = float('inf')
 	media_result_20 = 0
 	array_result_20 = []
@@ -133,12 +149,13 @@ def main():
 	best_result_100 = float('inf')
 	media_result_100 = 0
 	array_result_100 = []
-
-
-	for i in range(10):
-		result_20 = run_pso(20)
-		result_50 = run_pso(50)
-		result_100 = run_pso(100)
+	
+	qtd_rodadas = 50
+	
+	for i in range(qtd_rodadas):
+		result_20 = run_pso(20, qtd_particulas)
+		result_50 = run_pso(50, qtd_particulas)
+		result_100 = run_pso(100, qtd_particulas)
 
 		array_result_20.append(result_20[0])
 		array_result_50.append(result_50[0])
@@ -160,9 +177,9 @@ def main():
 		media_result_100 += result_100[0]
 
 	#Realizando a media
-	media_result_20 = media_result_20 / 10
-	media_result_50 = media_result_50 / 10
-	media_result_100 = media_result_100 / 10
+	media_result_20 = media_result_20 / qtd_rodadas
+	media_result_50 = media_result_50 / qtd_rodadas
+	media_result_100 = media_result_100 / qtd_rodadas
 
 	print("Best 20: %f. Media 20: %f" %(best_result_20, media_result_20))
 	print("Best 50: %f. Media 50: %f" %(best_result_50, media_result_50))
@@ -172,4 +189,21 @@ def main():
 	print("20 iterations:\n", array_result_20, "\n")
 	print("50 iterations:\n", array_result_50, "\n")
 	print("100 iterations:\n", array_result_100, "\n")
+	
+	#x = [1,2,3,4,5,6,7,8,9,10]
+	#array_result_20.sort(reverse=True)
+	#plt.plot(x, array_result_20)
+	#plt.show()
+	
+	#media_result_20.sort(reverse=True)
+	#plt.plot(x, media_result_20)
+	#plt.show()
+	
+
+def main():
+	print("--Resultados para 50 particulas--")
+	run(50)
+	
+	print("--Resultados para 100 particulas--")
+	run(100)
 main()
