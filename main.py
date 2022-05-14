@@ -158,12 +158,12 @@ def run(qtd_particulas):
 	array_result_20 = []
 	media_iteration_20 = [0] * 20
 
-	best_result_50 = float('inf')
+	best_result_50 = [float('inf'), [0,0], []]
 	media_result_50 = 0
 	array_result_50 = []
 	media_iteration_50 = [0] * 50
 
-	best_result_100 = float('inf')
+	best_result_100 = [float('inf'), [0,0], []]
 	media_result_100 = 0
 	array_result_100 = []
 	media_iteration_100 = [0] * 100
@@ -183,11 +183,11 @@ def run(qtd_particulas):
 		if(result_20[0] < best_result_20[0]):
 			best_result_20 = result_20
 		
-		if(result_50[0] < best_result_50):
-			best_result_50 = result_50[0]
+		if(result_50[0] < best_result_50[0]):
+			best_result_50 = result_50
 
-		if(result_100[0] < best_result_100):
-			best_result_100 = result_100[0]
+		if(result_100[0] < best_result_100[0]):
+			best_result_100 = result_100
 		
 		#Soma para realizar a media
 		media_result_20 += result_20[0]
@@ -225,6 +225,15 @@ def run(qtd_particulas):
 	#print(best_result_20[2])
 	legenda = str(qtd_particulas)  + ' particulas . 20 iteracoes'
 	save_graph([x for x in range(20)], media_iteration_20, best_result_20[2], legenda)
+
+	legenda = str(qtd_particulas)  + ' particulas . 50 iteracoes'
+	save_graph([x for x in range(50)], media_iteration_50, best_result_50[2], legenda)
+
+	legenda = str(qtd_particulas)  + ' particulas . 100 iteracoes'
+	save_graph([x for x in range(100)], media_iteration_100, best_result_100[2], legenda)
+
+	#legenda = str(qtd_particulas)  + ' particulas . 20 iteracoes'
+	#save_graph([x for x in range(100)], media_iteration_20, best_result_20[2], legenda)
 	
 	# print("Best 50: %f. Media 50: %f" %(best_result_50, media_result_50))
 	# print("Best 100: %f. Media 100: %f" %(best_result_100, media_result_100))
