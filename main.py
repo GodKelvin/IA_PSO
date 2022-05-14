@@ -2,7 +2,7 @@ import random
 import math
 from pathlib import Path
 import matplotlib.pyplot as plt
-import statistics
+import pandas as pd
 import math
 
 def fitness_function(position):
@@ -203,12 +203,10 @@ def run(qtd_particulas):
 	media_result_50 = media_result_50 / qtd_rodadas
 	media_result_100 = media_result_100 / qtd_rodadas
 
+	#Desvio padrao
 	desvio_20 = desvio_padrao(array_result_20, media_result_20)
 	desvio_50 = desvio_padrao(array_result_50, media_result_50)
 	desvio_100 = desvio_padrao(array_result_100, media_result_100)
-
-
-	#Desvio padrao
 
 	#Realizando a media (iteracao)
 	for i in range(20):
@@ -220,6 +218,7 @@ def run(qtd_particulas):
 	for i in range(100):
 		media_iteration_100[i] = media_iteration_100[i] / qtd_rodadas
 	
+	#Salvando os graficos
 	legenda = str(qtd_particulas)  + ' particulas . 20 iteracoes'
 	save_graph([x for x in range(20)], media_iteration_20, best_result_20[2], legenda)
 
@@ -228,6 +227,22 @@ def run(qtd_particulas):
 
 	legenda = str(qtd_particulas)  + ' particulas . 100 iteracoes'
 	save_graph([x for x in range(100)], media_iteration_100, best_result_100[2], legenda)
+
+	#Criando e salvando os valores em planilhas
+	dic_20 = {}
+	dic_20["resultados"] = array_result_20
+	dic_20["best_result"] = [best_result_20[0]]
+	dic_20["media"] = [media_result_20]
+	dic_20["desvio_padrao"] = [desvio_20]
+
+	#print(dic_20)
+
+	df = pd.DataFrame.from_dict(dic_20, orient='index')
+	df = (df.T)
+	#df.to_excel("teste.xlsx")
+	print(df)
+
+
 	
 	
 
@@ -238,7 +253,7 @@ def main():
 	#Para 50 particulas
 	run(50)
 	
-	#Para 100 particulas
+	#Para 100 particulas]
 	run(100)
 	print("Checar pasta: plot_graphs")
 main()
