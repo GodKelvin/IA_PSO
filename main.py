@@ -2,7 +2,8 @@ import random
 import math
 from pathlib import Path
 import matplotlib.pyplot as plt
-
+import statistics
+import math
 
 def fitness_function(position):
     #Modularizando para melhor manutencao da funcao
@@ -150,6 +151,27 @@ def remover_duplicados(list):
 	return [new_list, new_eixo]
 
 
+def desvio_padrao(lista, media):
+	result = 0
+	#print(media)
+	for i in range(len(lista)):
+		result += (lista[i] - media) ** 2
+	#dividindo os termos
+	result = result / len(lista)
+	print("VAR")
+	print(statistics.pvariance(lista))
+	print(result)
+	#Tirando a raiz
+	#result = result ** 0.5
+	result = math.sqrt(result)
+	print("Final")
+	print(statistics.stdev(lista))
+	print(result)
+	return result
+	
+
+
+
 def run(qtd_particulas):
 	
 	#Valor, posicao e lista de Gbest da respectiva iteracao
@@ -209,6 +231,13 @@ def run(qtd_particulas):
 	media_result_50 = media_result_50 / qtd_rodadas
 	media_result_100 = media_result_100 / qtd_rodadas
 
+	desvio_20 = desvio_padrao(array_result_20, media_result_20)
+	#print("RESULT DV: ")
+	#print(desvio_20)
+
+
+	#Desvio padrao
+
 	#Realizando a media (iteracao)
 	for i in range(20):
 		media_iteration_20[i] = media_iteration_20[i] / qtd_rodadas
@@ -231,11 +260,9 @@ def run(qtd_particulas):
 
 	legenda = str(qtd_particulas)  + ' particulas . 100 iteracoes'
 	save_graph([x for x in range(100)], media_iteration_100, best_result_100[2], legenda)
-
-	#legenda = str(qtd_particulas)  + ' particulas . 20 iteracoes'
-	#save_graph([x for x in range(100)], media_iteration_20, best_result_20[2], legenda)
 	
-	# print("Best 50: %f. Media 50: %f" %(best_result_50, media_result_50))
+	#print(best_result_20)
+	#print("Best 50: %f. Media 50: %f" %(best_result_50, media_result_50))
 	# print("Best 100: %f. Media 100: %f" %(best_result_100, media_result_100))
 
 	# print("\n--Results--")
@@ -254,6 +281,7 @@ def run(qtd_particulas):
 	
 
 def main():
+	#Criando pasta "plot_graphs" se nao existir
 	path = Path("plot_graphs")
 	path.mkdir(exist_ok=True)
 	#print("--Resultados para 50 particulas--")
