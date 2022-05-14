@@ -165,7 +165,7 @@ def desvio_padrao(lista, media):
 	#result = result ** 0.5
 	result = math.sqrt(result)
 	print("Final")
-	print(statistics.stdev(lista))
+	print(statistics.pstdev(lista))
 	print(result)
 	return result
 	
@@ -233,7 +233,7 @@ def run(qtd_particulas):
 
 	desvio_20 = desvio_padrao(array_result_20, media_result_20)
 	#print("RESULT DV: ")
-	#print(desvio_20)
+	print(array_result_20)
 
 
 	#Desvio padrao
