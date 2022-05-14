@@ -230,16 +230,17 @@ def run(qtd_particulas):
 
 	#Criando e salvando os valores em planilhas
 	dic_20 = {}
-	dic_20["resultados"] = array_result_20
-	dic_20["best_result"] = [best_result_20[0]]
-	dic_20["media"] = [media_result_20]
-	dic_20["desvio_padrao"] = [desvio_20]
+	dic_20["resultados_20_iteracoes"] = array_result_20
+	dic_20["best_result_20_iteracoes"] = [best_result_20[0]]
+	dic_20["media_20_iteracoes"] = [media_result_20]
+	dic_20["desvio_padrao_20_iteracoes"] = [desvio_20]
 
 	#print(dic_20)
 
+	#Salvar demais dados do F
 	df = pd.DataFrame.from_dict(dic_20, orient='index')
 	df = (df.T)
-	#df.to_excel("teste.xlsx")
+	df.to_excel("teste.xlsx")
 	print(df)
 
 
