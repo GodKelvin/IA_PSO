@@ -114,17 +114,10 @@ def run_pso(n_iterations, qtd_particulas):
 		
 		#Salvar o gbest no array de cata iteracao
 		all_gbest_iteration.append(gbest_fitness_value)
-		#media_gbest_iteration[iteration] += gbest_fitness_value
 		
 		#7 - Condicao de terminao nao foi alcancada
 		iteration = iteration + 1
 	
-	#Calcular media de cada iteracao e plotar grafico
-	# for i in range(n_iterations):
-	# 	media_gbest_iteration[i] = media_gbest_iteration[i] / n_iterations
-	
-	#Salvar valores do melhor valor da iteracao
-	#6 graficos com 2 tracados cada(50 e 100 particulas, media de cada iteracao e qual iteracao encontrei o melhor resultado)
 	return [gbest_fitness_value, gbest_position, all_gbest_iteration]
 
 
@@ -139,39 +132,18 @@ def save_graph(x, media, best, leg):
 	plt.savefig("plot_graphs/%s.png" %leg)
 	plt.close()
 
-def remover_duplicados(list):
-	tamanho_original = len(list)
-	new_list = []
-	new_eixo = []
-	for i in range(tamanho_original):
-		if(list[i] not in new_list):
-			new_list.append(list[i])
-			new_eixo.append(i+1)
-
-	return [new_list, new_eixo]
-
 
 def desvio_padrao(lista, media):
 	result = 0
-	#print(media)
 	for i in range(len(lista)):
 		result += (lista[i] - media) ** 2
-	#dividindo os termos
+	#Dividindo os termos
 	result = result / len(lista)
-	print("VAR")
-	print(statistics.pvariance(lista))
-	print(result)
+
 	#Tirando a raiz
-	#result = result ** 0.5
-	result = math.sqrt(result)
-	print("Final")
-	print(statistics.pstdev(lista))
-	print(result)
+	result = result ** 0.5
 	return result
 	
-
-
-
 def run(qtd_particulas):
 	
 	#Valor, posicao e lista de Gbest da respectiva iteracao
@@ -232,8 +204,8 @@ def run(qtd_particulas):
 	media_result_100 = media_result_100 / qtd_rodadas
 
 	desvio_20 = desvio_padrao(array_result_20, media_result_20)
-	#print("RESULT DV: ")
-	print(array_result_20)
+	desvio_50 = desvio_padrao(array_result_50, media_result_50)
+	desvio_100 = desvio_padrao(array_result_100, media_result_100)
 
 
 	#Desvio padrao
@@ -248,10 +220,6 @@ def run(qtd_particulas):
 	for i in range(100):
 		media_iteration_100[i] = media_iteration_100[i] / qtd_rodadas
 	
-
-	#print("Best 20: %f. Media 20: %f" %(best_result_20[0], media_result_20))
-	#rint(media_iteration_20)
-	#print(best_result_20[2])
 	legenda = str(qtd_particulas)  + ' particulas . 20 iteracoes'
 	save_graph([x for x in range(20)], media_iteration_20, best_result_20[2], legenda)
 
@@ -261,33 +229,16 @@ def run(qtd_particulas):
 	legenda = str(qtd_particulas)  + ' particulas . 100 iteracoes'
 	save_graph([x for x in range(100)], media_iteration_100, best_result_100[2], legenda)
 	
-	#print(best_result_20)
-	#print("Best 50: %f. Media 50: %f" %(best_result_50, media_result_50))
-	# print("Best 100: %f. Media 100: %f" %(best_result_100, media_result_100))
-
-	# print("\n--Results--")
-	# print("20 iterations:\n", array_result_20, "\n")
-	# print("50 iterations:\n", array_result_50, "\n")
-	# print("100 iterations:\n", array_result_100, "\n")
-	
-	#x = [1,2,3,4,5,6,7,8,9,10]
-	#array_result_20.sort(reverse=True)
-	#plt.plot(x, array_result_20)
-	#plt.show()
-	
-	#media_result_20.sort(reverse=True)
-	#plt.plot(x, media_result_20)
-	#plt.show()
 	
 
 def main():
 	#Criando pasta "plot_graphs" se nao existir
 	path = Path("plot_graphs")
 	path.mkdir(exist_ok=True)
-	#print("--Resultados para 50 particulas--")
+	#Para 50 particulas
 	run(50)
 	
-	#print("--Resultados para 100 particulas--")
+	#Para 100 particulas
 	run(100)
 	print("Checar pasta: plot_graphs")
 main()
