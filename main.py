@@ -4,7 +4,8 @@ from pathlib import Path
 import matplotlib.pyplot as plt
 import pandas as pd
 
-def fitness_function(position):
+#Funcao fitness
+def eggholder_function(position):
     #Modularizando para melhor manutencao da funcao
     seno_raiz = math.sin(math.sqrt(abs((position[0] / 2) + (position[1] + 47))))
     x_seno_raiz = position[0] * (math.sin(math.sqrt(abs(position[0] - (position[1] + 47)))))
@@ -47,20 +48,20 @@ def run_pso(n_iterations, qtd_particulas):
 
 	#2 - Inicializar aleatoriamente a posicao inicial(x) de cada particula
 	posicao_particulas = []
-	pbest_fitness_value = []
+	valor_particulas = []
 	vetor_velocidade = []
 
 	#3 - Velocidade inicial(v) para todas as particulas
 	velocidade_inicial = random_velocidade()
 	for i in range(qtd_particulas):
 		posicao_particulas.append(random_position())
-		pbest_fitness_value.append(float('inf'))
+		valor_particulas.append(float('inf'))
 		vetor_velocidade.append(velocidade_inicial)
 
 	#Atribuindo valores iniciais para pbest e gbest
-	pbest_position = posicao_particulas
-	gbest_fitness_value = float('inf')
-	gbest_position = [0,0]
+	pbest_posicao = posicao_particulas
+	gbest_valor = float('inf')
+	gbest_posicao = [0,0]
 	all_gbest_iteration = []
 
 	#Loop principal, ele que determina quando o algoritmo para
@@ -69,24 +70,25 @@ def run_pso(n_iterations, qtd_particulas):
 		#Para cada particula, calculo sua fitness
 		for i in range(qtd_particulas):
 			#4 a) - Calculando aptidao de 'p'
-			fitness_cadidate = fitness_function(posicao_particulas[i])
+			#Funcao fitness
+			result_iteracao_particula = eggholder_function(posicao_particulas[i])
 
 			#4 b) - Verificando a melhor posicao de 'p'
-			if(pbest_fitness_value[i] > fitness_cadidate):
-				pbest_fitness_value[i] = fitness_cadidate
-				pbest_position[i] = posicao_particulas[i]
+			if(result_iteracao_particula < valor_particulas[i]):
+				valor_particulas[i] = result_iteracao_particula
+				pbest_posicao[i] = posicao_particulas[i]
 
 			#5 - Verificando a melhor aptdao da populacao
-			if(gbest_fitness_value > fitness_cadidate):
-				gbest_fitness_value = fitness_cadidate
-				gbest_position = posicao_particulas[i]
+			if(result_iteracao_particula < gbest_valor):
+				gbest_valor = result_iteracao_particula
+				gbest_posicao = posicao_particulas[i]
 
 		#atualizo W para randomizar a posicao das particulas
 		Watual = update_w(iteration, Wmax, Wmin, n_iterations)
 		#Para cada particula, atualizo a sua velocidade (tomando cuidado com dominio)
 		for i in range(qtd_particulas):
 			#6 a) - Atualizando velocidade
-			nova_velocidade = update_velocidade(vetor_velocidade[i], Watual, pbest_position[i], gbest_position, posicao_particulas[i], c1, c2)
+			nova_velocidade = update_velocidade(vetor_velocidade[i], Watual, pbest_posicao[i], gbest_posicao, posicao_particulas[i], c1, c2)
 			#Limitando a velocidade x
 			if(nova_velocidade[0] < -77):
 				nova_velocidade[0] = -77
@@ -115,12 +117,12 @@ def run_pso(n_iterations, qtd_particulas):
 			posicao_particulas[i] =nova_posicao
 		
 		#Salvar o gbest no array de cata iteracao
-		all_gbest_iteration.append(gbest_fitness_value)
+		all_gbest_iteration.append(gbest_valor)
 		
 		#7 - Condicao de terminao nao foi alcancada
 		iteration = iteration + 1
 	
-	return [gbest_fitness_value, gbest_position, all_gbest_iteration]
+	return [gbest_valor, gbest_posicao, all_gbest_iteration]
 
 
 
