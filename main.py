@@ -137,6 +137,13 @@ def save_graph(x, media, best, leg):
 	plt.savefig("plot_graphs/%s.png" %leg)
 	plt.close()
 
+def save_planilha(dicionario_dados, nome_arquivo):
+	#Converto o dicionario de dados para um dataframe
+	df = pd.DataFrame.from_dict(dicionario_dados, orient='index')
+	df = (df.T)
+	#Salvo no formato de planilhas, dado o nome do arquivo (extensao .xlsx)
+	df.to_excel(nome_arquivo)
+
 
 #Calculo do desvido padrao
 def desvio_padrao(lista, media):
@@ -256,17 +263,14 @@ def run(qtd_particulas):
 	dic_100["media"] = [media_result_100]
 	dic_100["desvio_padrao"] = [desvio_100]
 
-	df = pd.DataFrame.from_dict(dic_20, orient='index')
-	df = (df.T)
-	df.to_excel("result_planilhas/%s_particulas_20_iteracoes.xlsx" %str(qtd_particulas))
+	nome_arquivo = ("result_planilhas/%s_particulas_20_iteracoes.xlsx" %str(qtd_particulas))
+	save_planilha(dic_20, nome_arquivo)
 
-	df = pd.DataFrame.from_dict(dic_50, orient='index')
-	df = (df.T)
-	df.to_excel("result_planilhas/%s_particulas_50_iteracoes.xlsx" %str(qtd_particulas))
+	nome_arquivo = ("result_planilhas/%s_particulas_50_iteracoes.xlsx" %str(qtd_particulas))
+	save_planilha(dic_50, nome_arquivo)
 
-	df = pd.DataFrame.from_dict(dic_100, orient='index')
-	df = (df.T)
-	df.to_excel("result_planilhas/%s_particulas_100_iteracoes.xlsx" %str(qtd_particulas))
+	nome_arquivo = ("result_planilhas/%s_particulas_100_iteracoes.xlsx" %str(qtd_particulas))
+	save_planilha(dic_100, nome_arquivo)
 
 def main():
 	#Criando pasta "plot_graphs" se nao existir
