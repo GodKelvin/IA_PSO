@@ -158,7 +158,6 @@ def desvio_padrao(lista, media):
 	return result
 
 #Dada a quantidade de particulas, execute!
-#Essa funcao
 def run(qtd_particulas):
 	
 	#Valor, posicao e lista de Gbest da respectiva iteracao
