@@ -15,7 +15,7 @@ Para insta-la (usando pip):
 pip install openpyxl
 ```
 
-Em seguida, para chamar a função main normalmente, usando ```python3```
+Em seguida, basta chamar a função main normalmente, usando ```python3```
 
 ```
 python3 main.py
@@ -23,5 +23,7 @@ python3 main.py
 
 ## Saída
 A saída consiste na criação de duas pastas, chamadas ```plot_graphs``` e ```result_planilhas```, cujas contém os arquivos de gráficos e os resultados em planilhas, respectivamente.
+
+O nome de cada arquivo descreve as características daquela execução, ou seja, quantidade de partículas e o número de iterações.
 
 ## O Relatório se encontra dentro da pasta docs.
