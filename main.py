@@ -3,7 +3,6 @@ import math
 from pathlib import Path
 import matplotlib.pyplot as plt
 import pandas as pd
-import math
 
 def fitness_function(position):
     #Modularizando para melhor manutencao da funcao
