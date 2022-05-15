@@ -37,8 +37,8 @@ def update_w(iteracao, Wmax, Wmin, n_iterations):
 	return Wmax - (iteracao*(Wmax-Wmin) / n_iterations)
 
 
+#Dada o numero de iteracoes e a quantidade de particulas, execute!
 def run_pso(n_iterations, qtd_particulas):
-
 	#Setup
 	Wmax = 15
 	Wmin = 1
@@ -53,20 +53,21 @@ def run_pso(n_iterations, qtd_particulas):
 
 	#3 - Velocidade inicial(v) para todas as particulas
 	velocidade_inicial = random_velocidade()
-
 	for i in range(qtd_particulas):
 		posicao_particulas.append(random_position())
 		pbest_fitness_value.append(float('inf'))
 		vetor_velocidade.append(velocidade_inicial)
 
+	#Atribuindo valores iniciais para pbest e gbest
 	pbest_position = posicao_particulas
 	gbest_fitness_value = float('inf')
 	gbest_position = [0,0]
-	
 	all_gbest_iteration = []
 
+	#Loop principal, ele que determina quando o algoritmo para
 	iteration = 0
 	while iteration < n_iterations:
+		#Para cada particula, calculo sua fitness
 		for i in range(qtd_particulas):
 			#4 a) - Calculando aptidao de 'p'
 			fitness_cadidate = fitness_function(posicao_particulas[i])
@@ -81,7 +82,9 @@ def run_pso(n_iterations, qtd_particulas):
 				gbest_fitness_value = fitness_cadidate
 				gbest_position = posicao_particulas[i]
 
+		#atualizo W para randomizar a posicao das particulas
 		Watual = update_w(iteration, Wmax, Wmin, n_iterations)
+		#Para cada particula, atualizo a sua velocidade (tomando cuidado com dominio)
 		for i in range(qtd_particulas):
 			#6 a) - Atualizando velocidade
 			nova_velocidade = update_velocidade(vetor_velocidade[i], Watual, pbest_position[i], gbest_position, posicao_particulas[i], c1, c2)
@@ -122,6 +125,7 @@ def run_pso(n_iterations, qtd_particulas):
 
 
 
+#Funcao para salvar os resultados obtidos a partir de determinada execucao
 def save_graph(x, media, best, leg):
 	plt.plot(x, media, label = "Media")
 	plt.plot(x, best, label = "Best Result")
@@ -133,6 +137,7 @@ def save_graph(x, media, best, leg):
 	plt.close()
 
 
+#Calculo do desvido padrao
 def desvio_padrao(lista, media):
 	result = 0
 	for i in range(len(lista)):
@@ -143,7 +148,9 @@ def desvio_padrao(lista, media):
 	#Tirando a raiz
 	result = result ** 0.5
 	return result
-	
+
+#Dada a quantidade de particulas, execute!
+#Essa funcao
 def run(qtd_particulas):
 	
 	#Valor, posicao e lista de Gbest da respectiva iteracao
