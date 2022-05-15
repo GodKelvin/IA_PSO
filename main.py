@@ -225,36 +225,55 @@ def run(qtd_particulas):
 	legenda = str(qtd_particulas)  + ' particulas . 50 iteracoes'
 	save_graph([x for x in range(50)], media_iteration_50, best_result_50[2], legenda)
 
-	legenda = str(qtd_particulas)  + ' particulas . 100 iteracoes'
+	legenda = str(qtd_particulas)  + '_particulas_100_iteracoes'
 	save_graph([x for x in range(100)], media_iteration_100, best_result_100[2], legenda)
 
 	#Criando e salvando os valores em planilhas
 	dic_20 = {}
-	dic_20["resultados_20_iteracoes"] = array_result_20
-	dic_20["best_result_20_iteracoes"] = [best_result_20[0]]
-	dic_20["media_20_iteracoes"] = [media_result_20]
-	dic_20["desvio_padrao_20_iteracoes"] = [desvio_20]
+	dic_50 = {}
+	dic_100 = {}
 
-	#print(dic_20)
+	dic_20["resultados"] = array_result_20
+	dic_20["best_result"] = [best_result_20[0]]
+	dic_20["media"] = [media_result_20]
+	dic_20["desvio_padrao"] = [desvio_20]
 
-	#Salvar demais dados do F
+	dic_50["resultados"] = array_result_50
+	dic_50["best_result"] = [best_result_50[0]]
+	dic_50["media"] = [media_result_50]
+	dic_50["desvio_padrao"] = [desvio_50]
+
+	dic_100["resultados"] = array_result_100
+	dic_100["best_result"] = [best_result_100[0]]
+	dic_100["media"] = [media_result_100]
+	dic_100["desvio_padrao"] = [desvio_100]
+
 	df = pd.DataFrame.from_dict(dic_20, orient='index')
 	df = (df.T)
-	df.to_excel("teste.xlsx")
-	print(df)
+	df.to_excel("result_planilhas/%s_particulas_20_iteracoes.xlsx" %str(qtd_particulas))
 
+	df = pd.DataFrame.from_dict(dic_50, orient='index')
+	df = (df.T)
+	df.to_excel("result_planilhas/%s_particulas_50_iteracoes.xlsx" %str(qtd_particulas))
 
-	
-	
+	df = pd.DataFrame.from_dict(dic_100, orient='index')
+	df = (df.T)
+	df.to_excel("result_planilhas/%s_particulas_100_iteracoes.xlsx" %str(qtd_particulas))
 
 def main():
 	#Criando pasta "plot_graphs" se nao existir
 	path = Path("plot_graphs")
 	path.mkdir(exist_ok=True)
+
+	#Criando pasta "result_planilhas" se nao existir
+	path = Path("result_planilhas")
+	path.mkdir(exist_ok=True)
+
 	#Para 50 particulas
 	run(50)
 	
 	#Para 100 particulas]
 	run(100)
-	print("Checar pasta: plot_graphs")
+	print(">> Checar pasta: plot_graphs")
+	print(">> Checar pasta: result_planilhas")
 main()
