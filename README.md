@@ -26,4 +26,5 @@ A saída consiste na criação de duas pastas, chamadas ```plot_graphs``` e ```r
 
 O nome de cada arquivo descreve as características daquela execução, ou seja, quantidade de partículas e o número de iterações.
 
-## O Relatório se encontra dentro da pasta docs.
+## Nota
+De 0 a 100, a mesma recebeu nota 100.
